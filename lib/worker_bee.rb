@@ -4,18 +4,22 @@ module WorkerBee
   class Work
     attr_accessor :name, :deps, :block, :completed
 
-    def initialize name, *deps, &block
-      @name = name
+    def initialize deps, block
       @deps = deps
       @block = block
       @completed = false
     end
+    
+    def run
+      @completed = true
+      @block.call
+    end
   end
       
-  @works = {}
+  @todo = {}
   
-  def self.works
-    @works
+  def self.todo
+    @todo
   end
   
   def self.recipe &block
@@ -25,16 +29,12 @@ module WorkerBee
   
   def self.work name, *deps, &block
     raise ArgumentError, "Work needs a block" unless block_given?
-    @works[name] = WorkerBee::Work.new deps, block
+    @todo[name] = WorkerBee::Work.new deps, block
   end
   
   def self.run name
-    puts "running #{name.to_s}"
-    unless @work
-      #execute
-    else
-      puts "** #{name.to_s}!"
-    end
+    puts "running #{name}"
+    @todo[name].run
   end
 end
 

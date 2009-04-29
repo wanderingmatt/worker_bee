@@ -3,7 +3,13 @@ require 'worker_bee'
 
 class TestWorkerBee < Test::Unit::TestCase
   def setup
-    @wb = WorkerBee 
+    @wb = WorkerBee
+
+    @block = Proc.new { @wb.recipe do
+      work :name, :one, :two do
+        '** name'
+      end
+    end }
   end  
   
   def test_recipe_raises_without_a_block
@@ -27,20 +33,27 @@ class TestWorkerBee < Test::Unit::TestCase
   end
   
   def test_work_creates_work
-    @wb.work :name, :one, :two do
-      '** name'
-    end
+    @block.call
     
     assert @wb.todo.key? :name
   end
   
+  def test_work_needs_to_be_completed
+    @block.call
+    
+    assert ! @wb.todo[:name].completed    
+  end
+  
   def test_work_gets_run
-    @wb.recipe do
-      work :name, :one, :two do
-        '** name'
-      end
-    end
+    @block.call
     
     assert_equal '** name', @wb.run(:name)
+  end
+  
+  def test_run_completes_work    
+    @block.call
+    @wb.run(:name)
+    
+    assert @wb.todo[:name].completed
   end
 end
