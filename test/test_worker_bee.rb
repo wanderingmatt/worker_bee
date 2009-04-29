@@ -9,6 +9,14 @@ class TestWorkerBee < Test::Unit::TestCase
       work :name, :one, :two do
         '** name'
       end
+      
+      work :one do
+        '** one'
+      end
+      
+      work :two do
+        '** two'
+      end
     end }
   end  
   
@@ -55,5 +63,18 @@ class TestWorkerBee < Test::Unit::TestCase
     @wb.run(:name)
     
     assert @wb.todo[:name].completed
+  end
+  
+  def test_dependencies_run_first
+    @block.call
+    
+    assert_equal '** name', @wb.run(:name)
+  end
+  
+  def test_run_completes_nested_dependency
+    @block.call
+    @wb.run(:name)
+    
+    assert @wb.todo[:one].completed
   end
 end

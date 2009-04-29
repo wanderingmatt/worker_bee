@@ -34,6 +34,9 @@ module WorkerBee
   
   def self.run name
     puts "running #{name}"
+    @todo[name].deps.each do |dep|
+      self.run dep
+    end   
     @todo[name].run
   end
 end
