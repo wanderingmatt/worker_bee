@@ -1,0 +1,21 @@
+require 'worker_bee'
+
+WorkerBee.recipe do
+  work :sammich, :meat, :bread do
+    puts "** sammich!"
+  end
+
+  work :meat, :clean do
+    puts "** meat"
+  end
+
+  work :bread, :clean do
+    puts "** bread"
+  end
+
+  work :clean do
+    puts "** cleaning!"
+  end
+end
+
+WorkerBee.run :sammich
