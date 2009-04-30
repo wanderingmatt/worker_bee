@@ -32,10 +32,14 @@ module WorkerBee
     @todo[name] = WorkerBee::Work.new deps, block
   end
   
-  def self.run name
-    puts "running #{name}"
+  def self.run name, this_many = 0
+    puts "#{' ' * this_many}running #{name}"
     @todo[name].deps.each do |dep|
-      self.run dep
+      unless @todo[dep].completed
+        self.run dep, this_many + 1
+      else
+        puts "#{' ' * (this_many + 1)}not running #{dep} - already met dependency"
+      end
     end   
     @todo[name].run
   end

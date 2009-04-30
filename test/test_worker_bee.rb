@@ -65,13 +65,7 @@ class TestWorkerBee < Test::Unit::TestCase
     assert @wb.todo[:name].completed
   end
   
-  def test_dependencies_run_first
-    @block.call
-    
-    assert_equal '** name', @wb.run(:name)
-  end
-  
-  def test_run_completes_nested_dependency
+  def test_run_completes_nested_dependencies
     @block.call
     @wb.run(:name)
     
