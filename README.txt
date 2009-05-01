@@ -1,26 +1,46 @@
 = WorkerBee
 
-* FIX (url)
+* http://github.com/WanderingMatt/worker_bee/tree/master
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Given a recipe, builds up a list of todos and executes blocks of work in order of dependency
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+* Checks and completes dependencies based on syntax
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+  require 'worker_bee'
+
+  WorkerBee.recipe do
+    work :sammich, :meat, :bread do
+      puts "** sammich!"
+    end
+
+    work :meat, :clean do
+      puts "** meat"
+    end
+
+    work :bread, :clean do
+      puts "** bread"
+    end
+
+    work :clean do
+      puts "** cleaning!"
+    end
+  end
+
+  WorkerBee.run :sammich
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* None
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* None
 
 == LICENSE:
 
