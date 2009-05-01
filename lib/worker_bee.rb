@@ -24,7 +24,7 @@ module WorkerBee
   
   def self.recipe &block
     raise ArgumentError, "Recipe needs a block" unless block_given?
-    module_eval &block
+    module_eval(&block)
   end
   
   def self.work name, *deps, &block
@@ -33,6 +33,7 @@ module WorkerBee
   end
   
   def self.run name, this_many = 0
+    raise ArgumentError, "#{name.to_s} is not a valid task" unless @todo.key? name
     puts "#{' ' * this_many}running #{name}"
     @todo[name].deps.each do |dep|
       unless @todo[dep].completed
